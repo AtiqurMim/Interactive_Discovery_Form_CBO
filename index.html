@@ -7,6 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="format-detection" content="telephone=no" />
+  <meta name="description" content="Akij Pharmacy interactive operations discovery form" />
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <title>Akij Pharmacy Operations Discovery</title>
   <style>
     :root{
@@ -180,12 +183,11 @@
   <div class="container">
     <div class="note" id="browserNotice" style="margin-top:10px">
       <strong>Mobile opening instruction</strong>
-      WhatsApp preview-এর ভিতরে form কাজ নাও করতে পারে। File download করে Chrome, Safari বা Edge-এ
-      <b>Open with browser</b> ব্যবহার করুন। সবচেয়ে reliable ব্যবহারের জন্য hosted web link share করুন।
+      এই formটি mobile browser-এর জন্য optimized। WhatsApp link থেকে open হলে প্রয়োজন হলে browser menu থেকে <b>Open in browser</b> নির্বাচন করুন।
     </div>
     <header>
       <h1>Akij Pharmacy Operations Discovery Form</h1>
-      <p>Inventory, procurement, stockout, expiry, vendor performance, chronic refill এবং data readiness assessment</p>
+      <p>Outlet growth, chronic refill, repeat customer, stockout leakage এবং revenue opportunity assessment</p>
     </header>
 
     <div class="toolbar">
@@ -217,7 +219,7 @@
     </section>
 
     <section class="section">
-      <h2>Section 1 — Operational Questions</h2>
+      <h2>Section 1 — Growth, Customer & Revenue Questions</h2>
       <p>প্রযোজ্য ক্ষেত্রে একাধিক option select করা যাবে। প্রতিটি প্রশ্নের নিচে comment যোগ করা যাবে।</p>
     </section>
 
@@ -225,7 +227,7 @@
 
     <section class="section">
       <h2>Section 2 — Data Availability & Upload</h2>
-      <p>Initial analysis-এর জন্য full integration প্রয়োজন নেই। Available CSV/Excel export attach করলেই হবে।</p>
+      <p>Initial analysis-এর জন্য sensitive customer data বা full integration প্রয়োজন নেই। ৫–১০ outlet-এর ৩০–৬০ দিনের anonymized CSV/Excel export যথেষ্ট।</p>
     </section>
 
     <div class="note">
@@ -237,7 +239,7 @@
 
     <section class="footer-actions">
       <h2>Complete & Share</h2>
-      <p class="small">All 18 operational questions must be answered. Question 16 requires exactly three metrics.</p>
+      <p class="small">All 12 questions must be answered before final sharing.</p>
       <div class="button-row">
         <button class="primary" type="button" onclick="shareResponse()">Complete & Share via WhatsApp</button>
         <button class="secondary" type="button" onclick="saveDraft(true)">Save for Later</button>
@@ -247,7 +249,7 @@
   </div>
 
 <script>
-const STORAGE_KEY = "akij_pharmacy_operations_systems_mobile_v2";
+const STORAGE_KEY = "akij_pharmacy_cbo_mobile_v2";
 const currentFiles = {};
 
 const categories = [
@@ -257,125 +259,101 @@ const categories = [
 
 const questions = [
   {
-    id:"q1", type:"checkbox", required:true,
-    title:"1. Akij Pharmacy-তে currently সবচেয়ে critical medicine categories কোনগুলো?",
-    options:categories
+    id:"q1", type:"radio", required:true,
+    title:"1. Akij Pharmacy-এর long-term vision কি শুধু outlet expansion, নাকি chronic patient relationship / membership / refill model বানানোর চিন্তাও আছে?",
+    options:["শুধু outlet expansion","Outlet expansion + chronic patient relationship","Membership / refill model actively considered","এখনও কোনো clear direction নেই","জানি না"]
   },
   {
     id:"q2", type:"checkbox", required:true,
-    title:"2. কোন category stockout হলে customer সবচেয়ে দ্রুত অন্য pharmacy-তে চলে যায়?",
-    options:categories
+    title:"2. 100+ বা 200+ outlet হলে সবচেয়ে বড় business risk কোনটা হবে বলে মনে হয়?",
+    options:["Customer acquisition","Medicine availability","Outlet profitability","Operational control","Supplier / vendor discipline","Brand trust","Other"]
   },
   {
     id:"q3", type:"radio", required:true, attachment:true,
-    title:"3. Top 100 “must never stockout” SKU কি internally defined আছে?",
-    options:["হ্যাঁ — formally defined","আংশিকভাবে defined","না","জানি না / নিশ্চিত নই"]
+    title:"3. Repeat customer বা chronic medicine customer আলাদাভাবে track করা হয় কি? যেমন diabetes, hypertension, cardiac, asthma, thyroid patient.",
+    options:["হ্যাঁ — structuredভাবে track করা হয়","আংশিকভাবে track করা হয়","Manualভাবে track করা হয়","না","জানি না"]
   },
   {
-    id:"q4", type:"checkbox", required:true,
-    title:"4. Branch-wise safety stock কীভাবে decide করা হয়?",
-    options:["Manual judgement","Average sales","Supplier lead time","System recommendation","Central instruction","Other"]
+    id:"q4", type:"radio", required:true, attachment:true,
+    title:"4. একজন chronic customer মাসে কতবার repeat purchase করে — এই data কি পাওয়া যায়?",
+    options:["হ্যাঁ — customer-wise পাওয়া যায়","Category-wise পাওয়া যায়","আংশিকভাবে পাওয়া যায়","না","জানি না"]
   },
   {
-    id:"q5", type:"checkbox", required:true,
-    title:"5. New outlet opening-এর সময় initial SKU assortment কীভাবে decide করা হয়?",
-    options:["Historical sales","Nearby branch pattern","Central instruction","Local demographics","Doctor / prescription demand","Vendor availability","Manual judgement","Other"]
-  },
-  {
-    id:"q6", type:"checkbox", required:true,
-    title:"6. Slow-moving item আর short-expiry item currently কীভাবে identify করা হয়?",
-    options:["ERP / POS report","Manual Excel","Physical review","Expiry report","Central review","No formal process","Other"]
-  },
-  {
-    id:"q7", type:"radio", required:true,
-    title:"7. Near-expiry product branch-to-branch transfer হয়? হলে manual নাকি system-driven?",
-    options:["হ্যাঁ — manual","হ্যাঁ — system-driven","দুইভাবেই হয়","না","জানি না"]
-  },
-  {
-    id:"q8", type:"composite", required:true,
-    title:"8. Supplier/vendor return policy কতটা reliable?",
-    options:["খুব reliable","মোটামুটি reliable","Inconsistent","Unreliable","জানি না"],
-    secondaryTitle:"কোন return type প্রযোজ্য?",
-    secondary:["Short-expiry return","Damaged product return","Non-moving return","Wrong supply return"]
-  },
-  {
-    id:"q9", type:"radio", required:true, attachment:true,
-    title:"9. Supplier fill-rate track করা হয়? যেমন ordered 100, received 70 — vendor-wise performance.",
-    options:["হ্যাঁ — vendor-wise regularly","আংশিকভাবে / manually","না","জানি না"]
-  },
-  {
-    id:"q10", type:"checkbox", required:true,
-    title:"10. GRN mismatch সাধারণত কোথায় বেশি হয়?",
-    options:["Quantity","Price","Batch","Expiry","Invoice","Discount","Scheme / Free goods","Other"]
-  },
-  {
-    id:"q11", type:"radio", required:true, attachment:true,
-    title:"11. Category profitability branch-wise দেখা যায়?",
-    options:["হ্যাঁ — detailed visibility আছে","আংশিকভাবে দেখা যায়","না","জানি না"]
-  },
-  {
-    id:"q12", type:"radio", required:true, attachment:true,
-    title:"12. Prescription থেকে demand insight capture করা হয়?",
-    options:["হ্যাঁ — structuredভাবে","আংশিকভাবে / manually","না","জানি না"]
-  },
-  {
-    id:"q13", type:"radio", required:true, attachment:true,
-    title:"13. Pharmacist বা branch staff lost demand লিখে রাখে? যেমন medicine ছিল না, customer চলে গেছে.",
+    id:"q5", type:"radio", required:true, attachment:true,
+    title:"5. Customer যদি medicine না পেয়ে চলে যায়, সেটা কি “lost demand” হিসেবে capture করা হয়?",
     options:["হ্যাঁ — system-এ","হ্যাঁ — manual register / Excel","Occasionally","না","জানি না"]
   },
   {
-    id:"q14", type:"composite", required:true,
-    title:"14. Stockout সময় real-time suggestion system practical হবে?",
-    options:["খুব practical","Practical, কিছু adjustment লাগবে","Limited practical","Practical নয়","জানি না"],
-    secondaryTitle:"কোন suggestion সবচেয়ে useful হবে?",
-    secondary:["Nearby branch stock আছে","Central stock আছে","Approved substitute আছে","Customer later delivery নিতে চায় কিনা"]
+    id:"q6", type:"checkbox", required:true,
+    title:"6. Stockout হলে branch কী করে?",
+    options:["Nearby branch থেকে arrange করে","Substitute brand suggest করে","Later delivery নেয়","Sale simply lost হয়","Central stock check করে","Other"]
   },
   {
-    id:"q15", type:"checkbox", required:true,
-    title:"15. Chronic refill reminder চালু করতে হলে operations-wise সবচেয়ে বড় বাধা কী?",
-    options:["Customer data","Prescription validation","Stock availability","Pharmacist time","Delivery","Payment collection","Customer trust","Other"]
+    id:"q7", type:"radio", required:true,
+    title:"7. Monthly chronic medicine refill reminder / refill pack / subscription-type service Akij-এর জন্য interesting হতে পারে?",
+    options:["খুব interesting","Interesting, pilot করা যেতে পারে","Limited interest","Interesting নয়","জানি না"]
   },
   {
-    id:"q16", type:"checkbox", required:true, min:3, max:3,
-    title:"16. ১০ outlet-এর ৬০ দিনের pilot করলে কোন ৩টা metric দেখলে এটা valuable বলবেন?",
-    options:["Stockout কমেছে","Expiry loss কমেছে","Vendor fill-rate improve হয়েছে","Repeat customer বেড়েছে","Branch transfer improve হয়েছে","Chronic refill revenue এসেছে"]
+    id:"q8", type:"radio", required:true,
+    title:"8. bKash/Nagad payment link দিয়ে monthly refill reminder বা family-sponsored medicine pack চালু করা practical মনে হয়?",
+    options:["খুব practical","Practical, কিছু operational setup লাগবে","Limited practical","Practical নয়","জানি না"]
   },
   {
-    id:"q17", type:"radio", required:true, attachment:true,
-    title:"17. Existing ERP/POS export দিয়ে analysis করা operations team-এর জন্য feasible হবে?",
-    options:["হ্যাঁ — সহজে feasible","Feasible, কিছু cleanup লাগবে","কঠিন কিন্তু সম্ভব","Feasible নয়","জানি না"]
+    id:"q9", type:"checkbox", required:true,
+    title:"9. Akij-এর জন্য কোন recurring model সবচেয়ে practical?",
+    options:["Diabetes monthly pack","Hypertension monthly pack","Elder-care family pack","Corporate employee medicine benefit","Doctor / clinic referral-linked refill","Chronic refill club","Other"]
   },
   {
-    id:"q18", type:"radio", required:true, attachment:true,
-    title:"18. iBOS/internal IT team-এর সঙ্গে কাজ করলে কোন integration path সবচেয়ে practical?",
-    options:["CSV / Excel export","API","Database view","Manual upload","Dashboard only"]
+    id:"q10", type:"composite", required:true,
+    title:"10. Management dashboard-এ weekly leakage এবং opportunity metrics দেখা decision making-এ useful হবে?",
+    options:["খুব useful","Useful","Limited useful","Useful নয়","জানি না"],
+    secondaryTitle:"কোন metrics সবচেয়ে useful হবে?",
+    secondary:["Stockout lost sales value","Near-expiry risk value","Chronic refill opportunity","Repeat customer conversion","Branch-wise revenue leakage"]
+  },
+  {
+    id:"q11", type:"radio", required:true, attachment:true,
+    title:"11. Existing ERP/POS data থেকেই যদি ১৪ দিনে leakage/revenue opportunity report বানানো যায়, সেটা দেখতে interested?",
+    options:["হ্যাঁ — খুব interested","হ্যাঁ — management review করা যেতে পারে","Possibly, more detail needed","Interested নয়","জানি না"]
+  },
+  {
+    id:"q12", type:"radio", required:true,
+    title:"12. Pilot-এ stockout recovery + chronic refill reminder থেকে measurable revenue এলে low fixed fee + success fee / revenue share model acceptable হতে পারে?",
+    options:["হ্যাঁ — acceptable","Pilot result-এর উপর depend করবে","Fixed fee preferred","Revenue share acceptable নয়","Management decision required","জানি না"]
   }
 ];
 
 const dataSections = [
   {
-    id:"dataA", title:"A. Master Data",
-    items:["Outlet master","SKU master","Category mapping","Generic / brand mapping","Vendor / supplier master","MRP and purchase price","Margin / discount if available"]
+    id:"dataA", title:"1. Outlet List",
+    items:["Outlet name","Location","Opening date","Outlet type"]
   },
   {
-    id:"dataB", title:"B. Inventory Data",
-    items:["Outlet-wise stock","Batch-wise stock","Expiry date","Stock adjustment","Branch transfer data","Dead stock / slow-moving stock"]
+    id:"dataB", title:"2. SKU Master",
+    items:["Product name","Generic name","Brand","Manufacturer","Category","MRP","Purchase price / margin if available"]
   },
   {
-    id:"dataC", title:"C. Sales Data",
-    items:["Daily SKU-wise sales","Outlet-wise sales","Category-wise sales","Prescription vs OTC if available","Customer repeat ID masked if available"]
+    id:"dataC", title:"3. Sales Data",
+    items:["Outlet-wise daily sales","SKU-wise quantity sold","Sales value","Date","Prescription / OTC flag if available"]
   },
   {
-    id:"dataD", title:"D. Procurement / Vendor Data",
-    items:["Purchase order","GRN","Ordered vs received quantity","Supplier delivery date","Invoice value","Price mismatch","Return / claim data","Supplier fill-rate if available"]
+    id:"dataD", title:"4. Inventory Data",
+    items:["Outlet-wise current stock","SKU-wise stock","Batch number if available","Expiry date if available"]
   },
   {
-    id:"dataE", title:"E. Leakage Data",
-    items:["Stockout history","Zero-stock days","Lost demand, if captured","Expiry / write-off value","Near-expiry return value","Damaged product value","Customer complaint related to unavailability"]
+    id:"dataE", title:"5. Stockout / Zero-Stock Data",
+    items:["Which SKU was zero at which branch","Number of stockout days"]
   },
   {
-    id:"dataF", title:"F. Chronic Refill Data, if available",
-    items:["Repeat customer masked ID","Monthly medicine purchase pattern","Chronic category purchase","Refill gap","Customer phone number only if consent-based pilot is approved later"]
+    id:"dataF", title:"6. Repeat Customer Data — Anonymized",
+    items:["Masked customer ID","Purchase frequency","Chronic category purchase","Monthly repeat amount"]
+  },
+  {
+    id:"dataG", title:"7. Vendor / Supplier Data",
+    items:["Supplier name","Ordered quantity","Received quantity","Delivery date","GRN date","Partial supply / mismatch"]
+  },
+  {
+    id:"dataH", title:"8. Return / Expiry Data",
+    items:["Near-expiry product","Expired / write-off value","Returned product","Supplier return status"]
   }
 ];
 
@@ -595,8 +573,7 @@ function validateComplete(){
   const missing = questions.filter(q => !isQuestionAnswered(q));
   const issues = [];
   if(missing.length) issues.push(`Unanswered questions: ${missing.map(q => q.id.replace("q","")).join(", ")}`);
-  const q16count = getSelectedValues("q16").length;
-  if(q16count !== 3) issues.push(`Question 16 requires exactly 3 metrics; currently selected ${q16count}.`);
+  
   return issues;
 }
 
@@ -782,6 +759,13 @@ if(saved){
   }
 }
 updateProgress();
+</script>
+<script>
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js").catch(function () {});
+  });
+}
 </script>
 </body>
 </html>
