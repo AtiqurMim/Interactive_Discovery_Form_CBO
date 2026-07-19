@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Akij Pharmacy Operations Discovery</title>
+  <style>
+    :root{
+      --bg:#f4f7f7;
+      --card:#ffffff;
+      --text:#17313a;
+      --muted:#64748b;
+      --primary:#0f766e;
+      --primary-dark:#0b5d57;
+      --border:#d9e3e5;
+      --soft:#e8f5f3;
+      --warning:#fff7ed;
+      --warning-border:#fed7aa;
+      --danger:#b42318;
+      --shadow:0 8px 24px rgba(15, 118, 110, .08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, "Noto Sans Bengali", "Segoe UI", Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    .container{max-width:980px;margin:0 auto;padding:18px}
+    header{
+      background:linear-gradient(135deg,#0f766e,#164e63);
+      color:white;
+      padding:24px;
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      margin-bottom:16px;
+    }
+    header h1{margin:0 0 8px;font-size:clamp(1.45rem,3vw,2.25rem)}
+    header p{margin:0;opacity:.93}
+    .toolbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(244,247,247,.96);
+      backdrop-filter:blur(10px);
+      padding:10px 0;
+      margin-bottom:12px;
+    }
+    .toolbar-inner{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      box-shadow:var(--shadow);
+    }
+    .progress-wrap{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+    .progress-track{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+    .progress-bar{height:100%;width:0;background:var(--primary);transition:width .25s ease}
+    .save-status{font-size:.86rem;color:var(--muted);margin-top:7px}
+    .button-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    button{
+      border:0;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:700;
+      cursor:pointer;
+      font-size:.94rem;
+    }
+    .primary{background:var(--primary);color:white}
+    .primary:hover{background:var(--primary-dark)}
+    .secondary{background:#e2e8f0;color:#1e293b}
+    .danger{background:#fee2e2;color:var(--danger)}
+    .meta,.section,.question-card,.data-card,.note{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      margin-bottom:14px;
+    }
+    .meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    @media(max-width:680px){
+      .container{padding:10px}
+      header{padding:18px;border-radius:14px}
+      .meta-grid{grid-template-columns:1fr}
+      .toolbar{position:relative;top:auto}
+      .toolbar-inner{padding:10px}
+      .button-row{display:grid;grid-template-columns:1fr 1fr}
+      button{min-height:46px;padding:11px 9px}
+      .question-card,.data-card,.meta,.section,.note,.footer-actions{padding:14px;border-radius:13px}
+      .option{min-height:46px;align-items:center}
+      .option input{transform:scale(1.25);flex:0 0 auto}
+      input[type="text"],input[type="tel"],input[type="date"],textarea,select{
+        font-size:16px;min-height:46px
+      }
+      textarea{min-height:90px}
+    }
+    @media(max-width:390px){
+      .button-row{grid-template-columns:1fr}
+    }
+    label.field-label{display:block;font-weight:700;margin-bottom:6px}
+    input[type="text"], input[type="tel"], input[type="date"], textarea, select{
+      width:100%;
+      border:1px solid #cbd5e1;
+      border-radius:10px;
+      padding:10px 11px;
+      font:inherit;
+      background:white;
+      color:var(--text);
+    }
+    textarea{min-height:76px;resize:vertical}
+    input:focus,textarea:focus,select:focus{
+      outline:3px solid rgba(15,118,110,.13);
+      border-color:var(--primary);
+    }
+    .section h2{margin:0 0 5px}
+    .section p{margin:0;color:var(--muted)}
+    .question-title{font-weight:800;margin-bottom:10px}
+    .required{color:var(--danger)}
+    .options{display:grid;gap:8px;margin-bottom:12px}
+    .option{
+      display:flex;
+      gap:9px;
+      align-items:flex-start;
+      padding:9px 10px;
+      border:1px solid #e2e8f0;
+      border-radius:10px;
+      background:#fbfdfd;
+    }
+    .option:hover{border-color:#9fd3cc;background:#f4fbfa}
+    .option input{margin-top:4px;transform:scale(1.08)}
+    .subheading{font-weight:700;margin:12px 0 7px;color:#334155}
+    .hint{font-size:.84rem;color:var(--muted);margin-top:5px}
+    .filebox{
+      border:1px dashed #94a3b8;
+      border-radius:10px;
+      padding:10px;
+      background:#f8fafc;
+      margin-top:10px;
+    }
+    .file-list{font-size:.82rem;color:#475569;margin-top:6px}
+    .comment-label{font-size:.9rem;font-weight:700;margin:12px 0 6px;display:block}
+    .data-grid{display:grid;gap:8px;margin:12px 0}
+    .note{background:var(--warning);border-color:var(--warning-border)}
+    .note strong{display:block;margin-bottom:5px}
+    .footer-actions{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      margin:18px 0 36px;
+    }
+    .validation{color:var(--danger);font-weight:700;margin-top:10px;display:none}
+    .small{font-size:.85rem;color:var(--muted)}
+    .pill{
+      display:inline-block;
+      padding:3px 8px;
+      border-radius:999px;
+      background:var(--soft);
+      color:var(--primary-dark);
+      font-size:.78rem;
+      font-weight:700;
+      margin-left:6px;
+    }
+    @media print{
+      .toolbar,.button-row,.footer-actions button,.filebox input{display:none!important}
+      body{background:white}
+      .container{max-width:none}
+      .question-card,.data-card,.meta,.section,.note{box-shadow:none;break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="note" id="browserNotice" style="margin-top:10px">
+      <strong>Mobile opening instruction</strong>
+      WhatsApp preview-এর ভিতরে form কাজ নাও করতে পারে। File download করে Chrome, Safari বা Edge-এ
+      <b>Open with browser</b> ব্যবহার করুন। সবচেয়ে reliable ব্যবহারের জন্য hosted web link share করুন।
+    </div>
+    <header>
+      <h1>Akij Pharmacy Operations Discovery Form</h1>
+      <p>Inventory, procurement, stockout, expiry, vendor performance, chronic refill এবং data readiness assessment</p>
+    </header>
+
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <div class="progress-wrap">
+          <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+          <strong id="progressText">0%</strong>
+        </div>
+        <div id="saveStatus" class="save-status">Draft not yet saved</div>
+        <div class="button-row">
+          <button class="primary" type="button" onclick="saveDraft(true)">Save Draft</button>
+          <button class="secondary" type="button" onclick="downloadJSON()">Download JSON</button>
+          <button class="secondary" type="button" onclick="downloadCSV()">Download CSV</button>
+          <button class="secondary" type="button" onclick="window.print()">Print / Save PDF</button>
+          <button class="danger" type="button" onclick="clearDraft()">Clear Form</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="meta">
+      <h2>Respondent Information <span class="pill">Optional</span></h2>
+      <div class="meta-grid">
+        <div><label class="field-label" for="respondentName">Name</label><input id="respondentName" name="respondentName" type="text"></div>
+        <div><label class="field-label" for="role">Role / Department</label><input id="role" name="role" type="text"></div>
+        <div><label class="field-label" for="outlet">Outlet / Office</label><input id="outlet" name="outlet" type="text"></div>
+        <div><label class="field-label" for="phone">Phone / WhatsApp</label><input id="phone" name="phone" type="tel"></div>
+        <div><label class="field-label" for="responseDate">Date</label><input id="responseDate" name="responseDate" type="date"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Section 1 — Operational Questions</h2>
+      <p>প্রযোজ্য ক্ষেত্রে একাধিক option select করা যাবে। প্রতিটি প্রশ্নের নিচে comment যোগ করা যাবে।</p>
+    </section>
+
+    <main id="questions"></main>
+
+    <section class="section">
+      <h2>Section 2 — Data Availability & Upload</h2>
+      <p>Initial analysis-এর জন্য full integration প্রয়োজন নেই। Available CSV/Excel export attach করলেই হবে।</p>
+    </section>
+
+    <div class="note">
+      <strong>Attachment note</strong>
+      Selected files can be included through the phone’s native share sheet when supported. Browser reload-এর পর security restriction-এর কারণে file আবার select করতে হতে পারে; answers and comments remain saved.
+    </div>
+
+    <main id="dataSections"></main>
+
+    <section class="footer-actions">
+      <h2>Complete & Share</h2>
+      <p class="small">All 18 operational questions must be answered. Question 16 requires exactly three metrics.</p>
+      <div class="button-row">
+        <button class="primary" type="button" onclick="shareResponse()">Complete & Share via WhatsApp</button>
+        <button class="secondary" type="button" onclick="saveDraft(true)">Save for Later</button>
+      </div>
+      <div id="validationMessage" class="validation"></div>
+    </section>
+  </div>
+
+<script>
+const STORAGE_KEY = "akij_pharmacy_operations_systems_mobile_v2";
+const currentFiles = {};
+
+const categories = [
+  "Diabetes","Hypertension","Cardiac","Antibiotic","Gastric",
+  "Pain","Insulin / Cold Chain","Oncology / Specialty","OTC / Wellness","Other"
+];
+
+const questions = [
+  {
+    id:"q1", type:"checkbox", required:true,
+    title:"1. Akij Pharmacy-তে currently সবচেয়ে critical medicine categories কোনগুলো?",
+    options:categories
+  },
+  {
+    id:"q2", type:"checkbox", required:true,
+    title:"2. কোন category stockout হলে customer সবচেয়ে দ্রুত অন্য pharmacy-তে চলে যায়?",
+    options:categories
+  },
+  {
+    id:"q3", type:"radio", required:true, attachment:true,
+    title:"3. Top 100 “must never stockout” SKU কি internally defined আছে?",
+    options:["হ্যাঁ — formally defined","আংশিকভাবে defined","না","জানি না / নিশ্চিত নই"]
+  },
+  {
+    id:"q4", type:"checkbox", required:true,
+    title:"4. Branch-wise safety stock কীভাবে decide করা হয়?",
+    options:["Manual judgement","Average sales","Supplier lead time","System recommendation","Central instruction","Other"]
+  },
+  {
+    id:"q5", type:"checkbox", required:true,
+    title:"5. New outlet opening-এর সময় initial SKU assortment কীভাবে decide করা হয়?",
+    options:["Historical sales","Nearby branch pattern","Central instruction","Local demographics","Doctor / prescription demand","Vendor availability","Manual judgement","Other"]
+  },
+  {
+    id:"q6", type:"checkbox", required:true,
+    title:"6. Slow-moving item আর short-expiry item currently কীভাবে identify করা হয়?",
+    options:["ERP / POS report","Manual Excel","Physical review","Expiry report","Central review","No formal process","Other"]
+  },
+  {
+    id:"q7", type:"radio", required:true,
+    title:"7. Near-expiry product branch-to-branch transfer হয়? হলে manual নাকি system-driven?",
+    options:["হ্যাঁ — manual","হ্যাঁ — system-driven","দুইভাবেই হয়","না","জানি না"]
+  },
+  {
+    id:"q8", type:"composite", required:true,
+    title:"8. Supplier/vendor return policy কতটা reliable?",
+    options:["খুব reliable","মোটামুটি reliable","Inconsistent","Unreliable","জানি না"],
+    secondaryTitle:"কোন return type প্রযোজ্য?",
+    secondary:["Short-expiry return","Damaged product return","Non-moving return","Wrong supply return"]
+  },
+  {
+    id:"q9", type:"radio", required:true, attachment:true,
+    title:"9. Supplier fill-rate track করা হয়? যেমন ordered 100, received 70 — vendor-wise performance.",
+    options:["হ্যাঁ — vendor-wise regularly","আংশিকভাবে / manually","না","জানি না"]
+  },
+  {
+    id:"q10", type:"checkbox", required:true,
+    title:"10. GRN mismatch সাধারণত কোথায় বেশি হয়?",
+    options:["Quantity","Price","Batch","Expiry","Invoice","Discount","Scheme / Free goods","Other"]
+  },
+  {
+    id:"q11", type:"radio", required:true, attachment:true,
+    title:"11. Category profitability branch-wise দেখা যায়?",
+    options:["হ্যাঁ — detailed visibility আছে","আংশিকভাবে দেখা যায়","না","জানি না"]
+  },
+  {
+    id:"q12", type:"radio", required:true, attachment:true,
+    title:"12. Prescription থেকে demand insight capture করা হয়?",
+    options:["হ্যাঁ — structuredভাবে","আংশিকভাবে / manually","না","জানি না"]
+  },
+  {
+    id:"q13", type:"radio", required:true, attachment:true,
+    title:"13. Pharmacist বা branch staff lost demand লিখে রাখে? যেমন medicine ছিল না, customer চলে গেছে.",
+    options:["হ্যাঁ — system-এ","হ্যাঁ — manual register / Excel","Occasionally","না","জানি না"]
+  },
+  {
+    id:"q14", type:"composite", required:true,
+    title:"14. Stockout সময় real-time suggestion system practical হবে?",
+    options:["খুব practical","Practical, কিছু adjustment লাগবে","Limited practical","Practical নয়","জানি না"],
+    secondaryTitle:"কোন suggestion সবচেয়ে useful হবে?",
+    secondary:["Nearby branch stock আছে","Central stock আছে","Approved substitute আছে","Customer later delivery নিতে চায় কিনা"]
+  },
+  {
+    id:"q15", type:"checkbox", required:true,
+    title:"15. Chronic refill reminder চালু করতে হলে operations-wise সবচেয়ে বড় বাধা কী?",
+    options:["Customer data","Prescription validation","Stock availability","Pharmacist time","Delivery","Payment collection","Customer trust","Other"]
+  },
+  {
+    id:"q16", type:"checkbox", required:true, min:3, max:3,
+    title:"16. ১০ outlet-এর ৬০ দিনের pilot করলে কোন ৩টা metric দেখলে এটা valuable বলবেন?",
+    options:["Stockout কমেছে","Expiry loss কমেছে","Vendor fill-rate improve হয়েছে","Repeat customer বেড়েছে","Branch transfer improve হয়েছে","Chronic refill revenue এসেছে"]
+  },
+  {
+    id:"q17", type:"radio", required:true, attachment:true,
+    title:"17. Existing ERP/POS export দিয়ে analysis করা operations team-এর জন্য feasible হবে?",
+    options:["হ্যাঁ — সহজে feasible","Feasible, কিছু cleanup লাগবে","কঠিন কিন্তু সম্ভব","Feasible নয়","জানি না"]
+  },
+  {
+    id:"q18", type:"radio", required:true, attachment:true,
+    title:"18. iBOS/internal IT team-এর সঙ্গে কাজ করলে কোন integration path সবচেয়ে practical?",
+    options:["CSV / Excel export","API","Database view","Manual upload","Dashboard only"]
+  }
+];
+
+const dataSections = [
+  {
+    id:"dataA", title:"A. Master Data",
+    items:["Outlet master","SKU master","Category mapping","Generic / brand mapping","Vendor / supplier master","MRP and purchase price","Margin / discount if available"]
+  },
+  {
+    id:"dataB", title:"B. Inventory Data",
+    items:["Outlet-wise stock","Batch-wise stock","Expiry date","Stock adjustment","Branch transfer data","Dead stock / slow-moving stock"]
+  },
+  {
+    id:"dataC", title:"C. Sales Data",
+    items:["Daily SKU-wise sales","Outlet-wise sales","Category-wise sales","Prescription vs OTC if available","Customer repeat ID masked if available"]
+  },
+  {
+    id:"dataD", title:"D. Procurement / Vendor Data",
+    items:["Purchase order","GRN","Ordered vs received quantity","Supplier delivery date","Invoice value","Price mismatch","Return / claim data","Supplier fill-rate if available"]
+  },
+  {
+    id:"dataE", title:"E. Leakage Data",
+    items:["Stockout history","Zero-stock days","Lost demand, if captured","Expiry / write-off value","Near-expiry return value","Damaged product value","Customer complaint related to unavailability"]
+  },
+  {
+    id:"dataF", title:"F. Chronic Refill Data, if available",
+    items:["Repeat customer masked ID","Monthly medicine purchase pattern","Chronic category purchase","Refill gap","Customer phone number only if consent-based pilot is approved later"]
+  }
+];
+
+function escapeHtml(text){
+  return String(text).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+
+function renderQuestion(q){
+  const card = document.createElement("section");
+  card.className = "question-card";
+  card.dataset.questionId = q.id;
+
+  let html = `<div class="question-title">${escapeHtml(q.title)} ${q.required ? '<span class="required">*</span>' : ''}</div><div class="options">`;
+
+  if(q.type === "checkbox" || q.type === "radio" || q.type === "composite"){
+    const inputType = q.type === "checkbox" ? "checkbox" : "radio";
+    q.options.forEach((opt, i) => {
+      html += `<label class="option">
+        <input type="${inputType}" name="${q.id}" value="${escapeHtml(opt)}" ${q.max ? `data-max="${q.max}"` : ""}>
+        <span>${escapeHtml(opt)}</span>
+      </label>`;
+    });
+  }
+
+  if(q.type === "composite" && q.secondary){
+    html += `</div><div class="subheading">${escapeHtml(q.secondaryTitle || "Applicable options")}</div><div class="options">`;
+    q.secondary.forEach(opt => {
+      html += `<label class="option">
+        <input type="checkbox" name="${q.id}_secondary" value="${escapeHtml(opt)}">
+        <span>${escapeHtml(opt)}</span>
+      </label>`;
+    });
+  }
+
+  html += `</div>`;
+
+  if(q.attachment){
+    html += `<div class="filebox">
+      <label class="field-label" for="${q.id}_file">Attach CSV / Excel <span class="pill">Optional</span></label>
+      <input id="${q.id}_file" type="file" accept=".csv,.xls,.xlsx" multiple data-file-key="${q.id}">
+      <div id="${q.id}_filelist" class="file-list">No file selected</div>
+    </div>`;
+  }
+
+  html += `<label class="comment-label" for="${q.id}_comment">Comment / Additional information</label>
+    <textarea id="${q.id}_comment" name="${q.id}_comment" placeholder="Type comment here..."></textarea>`;
+
+  card.innerHTML = html;
+  document.getElementById("questions").appendChild(card);
+}
+
+function renderDataSection(section){
+  const card = document.createElement("section");
+  card.className = "data-card";
+  let html = `<h3>${escapeHtml(section.title)}</h3>
+    <label class="field-label" for="${section.id}_status">Availability status</label>
+    <select id="${section.id}_status" name="${section.id}_status">
+      <option value="">Select...</option>
+      <option>Available now</option>
+      <option>Partially available</option>
+      <option>Requires approval</option>
+      <option>Not available</option>
+      <option>Unknown</option>
+    </select>
+    <div class="subheading">Available fields</div>
+    <div class="data-grid">`;
+
+  section.items.forEach(item => {
+    html += `<label class="option">
+      <input type="checkbox" name="${section.id}_items" value="${escapeHtml(item)}">
+      <span>${escapeHtml(item)}</span>
+    </label>`;
+  });
+
+  html += `</div>
+    <div class="filebox">
+      <label class="field-label" for="${section.id}_file">Attach CSV / Excel <span class="pill">Optional</span></label>
+      <input id="${section.id}_file" type="file" accept=".csv,.xls,.xlsx" multiple data-file-key="${section.id}">
+      <div id="${section.id}_filelist" class="file-list">No file selected</div>
+    </div>
+    <label class="comment-label" for="${section.id}_comment">Comment / Notes</label>
+    <textarea id="${section.id}_comment" name="${section.id}_comment" placeholder="Data period, source system, limitations, approval requirement..."></textarea>`;
+
+  card.innerHTML = html;
+  document.getElementById("dataSections").appendChild(card);
+}
+
+questions.forEach(renderQuestion);
+dataSections.forEach(renderDataSection);
+
+document.getElementById("responseDate").value = new Date().toISOString().slice(0,10);
+
+function getSelectedValues(name){
+  return Array.from(document.querySelectorAll(`[name="${name}"]:checked`)).map(el => el.value);
+}
+
+function collectState(){
+  const state = {
+    metadata:{
+      respondentName:document.getElementById("respondentName").value.trim(),
+      role:document.getElementById("role").value.trim(),
+      outlet:document.getElementById("outlet").value.trim(),
+      phone:document.getElementById("phone").value.trim(),
+      responseDate:document.getElementById("responseDate").value
+    },
+    questions:{},
+    dataSections:{},
+    savedAt:new Date().toISOString()
+  };
+
+  questions.forEach(q => {
+    state.questions[q.id] = {
+      title:q.title,
+      answer:getSelectedValues(q.id),
+      secondary:getSelectedValues(`${q.id}_secondary`),
+      comment:document.getElementById(`${q.id}_comment`).value.trim(),
+      attachments:(currentFiles[q.id] || []).map(f => ({name:f.name,size:f.size,type:f.type}))
+    };
+  });
+
+  dataSections.forEach(s => {
+    state.dataSections[s.id] = {
+      title:s.title,
+      status:document.getElementById(`${s.id}_status`).value,
+      items:getSelectedValues(`${s.id}_items`),
+      comment:document.getElementById(`${s.id}_comment`).value.trim(),
+      attachments:(currentFiles[s.id] || []).map(f => ({name:f.name,size:f.size,type:f.type}))
+    };
+  });
+
+  return state;
+}
+
+function restoreState(state){
+  if(!state) return;
+  const m = state.metadata || {};
+  Object.keys(m).forEach(key => {
+    const el = document.getElementById(key);
+    if(el) el.value = m[key] || "";
+  });
+
+  questions.forEach(q => {
+    const saved = (state.questions && state.questions[q.id]);
+    if(!saved) return;
+    (saved.answer || []).forEach(value => {
+      const el = Array.from(document.querySelectorAll(`[name="${q.id}"]`)).find(x => x.value === value);
+      if(el) el.checked = true;
+    });
+    (saved.secondary || []).forEach(value => {
+      const el = Array.from(document.querySelectorAll(`[name="${q.id}_secondary"]`)).find(x => x.value === value);
+      if(el) el.checked = true;
+    });
+    const comment = document.getElementById(`${q.id}_comment`);
+    if(comment) comment.value = saved.comment || "";
+    if(saved.attachments && saved.attachments.length){
+      const list = document.getElementById(`${q.id}_filelist`);
+      list.textContent = "Previously selected: " + saved.attachments.map(a => a.name).join(", ") + " — reselect before sharing.";
+    }
+  });
+
+  dataSections.forEach(s => {
+    const saved = (state.dataSections && state.dataSections[s.id]);
+    if(!saved) return;
+    document.getElementById(`${s.id}_status`).value = saved.status || "";
+    (saved.items || []).forEach(value => {
+      const el = Array.from(document.querySelectorAll(`[name="${s.id}_items"]`)).find(x => x.value === value);
+      if(el) el.checked = true;
+    });
+    document.getElementById(`${s.id}_comment`).value = saved.comment || "";
+    if(saved.attachments && saved.attachments.length){
+      const list = document.getElementById(`${s.id}_filelist`);
+      list.textContent = "Previously selected: " + saved.attachments.map(a => a.name).join(", ") + " — reselect before sharing.";
+    }
+  });
+}
+
+function safeStorageSet(key,value){
+  try{ localStorage.setItem(key,value); return true; }
+  catch(e){ return false; }
+}
+function safeStorageGet(key){
+  try{ return localStorage.getItem(key); }
+  catch(e){ return null; }
+}
+function safeStorageRemove(key){
+  try{ localStorage.removeItem(key); }catch(e){}
+}
+
+function saveDraft(manual=false){
+  const state = collectState();
+  const stored = safeStorageSet(STORAGE_KEY, JSON.stringify(state));
+  document.getElementById("saveStatus").textContent =
+    `${stored ? (manual ? "Draft saved" : "Autosaved") : "Draft kept only while this page remains open"} — ${new Date().toLocaleString()}`;
+  updateProgress();
+}
+
+function clearDraft(){
+  if(!confirm("Clear all saved answers and start again?")) return;
+  safeStorageRemove(STORAGE_KEY);
+  location.reload();
+}
+
+function isQuestionAnswered(q){
+  const selected = getSelectedValues(q.id);
+  if(q.min) return selected.length >= q.min;
+  return selected.length > 0;
+}
+
+function updateProgress(){
+  const answered = questions.filter(isQuestionAnswered).length;
+  const percent = Math.round((answered / questions.length) * 100);
+  document.getElementById("progressBar").style.width = percent + "%";
+  document.getElementById("progressText").textContent = `${percent}% (${answered}/${questions.length})`;
+}
+
+function validateComplete(){
+  const missing = questions.filter(q => !isQuestionAnswered(q));
+  const issues = [];
+  if(missing.length) issues.push(`Unanswered questions: ${missing.map(q => q.id.replace("q","")).join(", ")}`);
+  const q16count = getSelectedValues("q16").length;
+  if(q16count !== 3) issues.push(`Question 16 requires exactly 3 metrics; currently selected ${q16count}.`);
+  return issues;
+}
+
+function downloadBlob(content, filename, mime){
+  try{
+    const blob = new Blob([content], {type:mime});
+    if(window.navigator && window.navigator.msSaveOrOpenBlob){
+      window.navigator.msSaveOrOpenBlob(blob, filename);
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = filename;
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){
+      if(a.parentNode) a.parentNode.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 2000);
+  }catch(e){
+    alert("Download is blocked in this viewer. Open the file in Chrome, Safari, or Edge and try again.");
+  }
+}
+
+function downloadJSON(){
+  const state = collectState();
+  downloadBlob(JSON.stringify(state,null,2), `Akij_Pharmacy_Response_${state.metadata.responseDate || "draft"}.json`, "application/json");
+}
+
+function csvEscape(value){
+  const s = Array.isArray(value) ? value.join(" | ") : String(value ?? "");
+  return `"${s.replace(/"/g,'""')}"`;
+}
+
+function downloadCSV(){
+  const state = collectState();
+  const rows = [["Section","ID","Question / Data Group","Answer / Status","Secondary / Fields","Comment","Attachments"]];
+  questions.forEach(q => {
+    const r = state.questions[q.id];
+    rows.push(["Question",q.id,q.title,r.answer,r.secondary,r.comment,r.attachments.map(a=>a.name)]);
+  });
+  dataSections.forEach(s => {
+    const r = state.dataSections[s.id];
+    rows.push(["Data",s.id,s.title,r.status,r.items,r.comment,r.attachments.map(a=>a.name)]);
+  });
+  const csv = "\uFEFF" + rows.map(row => row.map(csvEscape).join(",")).join("\n");
+  downloadBlob(csv, `Akij_Pharmacy_Response_${state.metadata.responseDate || "draft"}.csv`, "text/csv;charset=utf-8");
+}
+
+function buildTextSummary(state){
+  let text = `AKIJ PHARMACY OPERATIONS DISCOVERY\n`;
+  text += `Date: ${state.metadata.responseDate || "-"}\n`;
+  text += `Name: ${state.metadata.respondentName || "-"}\n`;
+  text += `Role: ${state.metadata.role || "-"}\n`;
+  text += `Outlet: ${state.metadata.outlet || "-"}\n\n`;
+
+  questions.forEach((q,index) => {
+    const r = state.questions[q.id];
+    text += `${index+1}. ${q.title.replace(/^\d+\.\s*/,"")}\n`;
+    text += `Answer: ${(r.answer || []).join(", ") || "-"}\n`;
+    if(r.secondary && r.secondary.length) text += `Additional selection: ${r.secondary.join(", ")}\n`;
+    if(r.comment) text += `Comment: ${r.comment}\n`;
+    if(r.attachments && r.attachments.length) text += `Attachments: ${r.attachments.map(a=>a.name).join(", ")}\n`;
+    text += `\n`;
+  });
+
+  text += `DATA AVAILABILITY\n`;
+  dataSections.forEach(s => {
+    const r = state.dataSections[s.id];
+    text += `\n${s.title}\nStatus: ${r.status || "-"}\n`;
+    text += `Fields: ${r.items.join(", ") || "-"}\n`;
+    if(r.comment) text += `Comment: ${r.comment}\n`;
+    if(r.attachments && r.attachments.length) text += `Attachments: ${r.attachments.map(a=>a.name).join(", ")}\n`;
+  });
+
+  return text;
+}
+
+async function shareResponse(){
+  const issues = validateComplete();
+  const validation = document.getElementById("validationMessage");
+
+  if(issues.length){
+    validation.style.display = "block";
+    validation.textContent = issues.join(" ");
+    validation.scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+
+  validation.style.display = "none";
+  saveDraft(true);
+
+  const state = collectState();
+  const fullText = buildTextSummary(state);
+  const filename = `Akij_Pharmacy_Response_${state.metadata.responseDate || "completed"}.txt`;
+  const attachments = Object.values(currentFiles).reduce(function(all, group){
+    return all.concat(group || []);
+  }, []);
+
+  // First preference: native mobile share. Share files only when the browser confirms support.
+  try{
+    if(navigator.share){
+      let payload = {
+        title:"Akij Pharmacy Operations Discovery",
+        text:fullText
+      };
+
+      if(typeof File !== "undefined"){
+        const responseFile = new File([fullText], filename, {type:"text/plain"});
+        const shareFiles = [responseFile].concat(attachments);
+        if(navigator.canShare && navigator.canShare({files:shareFiles})){
+          payload.files = shareFiles;
+          payload.text = "Completed Akij Pharmacy operations discovery response.";
+        }
+      }
+
+      await navigator.share(payload);
+      return;
+    }
+  }catch(err){
+    if(err && err.name === "AbortError") return;
+  }
+
+  // Fallback: download the full response and open WhatsApp with a compact message.
+  downloadBlob(fullText, filename, "text/plain;charset=utf-8");
+  const compact = [
+    "Akij Pharmacy Operations Discovery completed.",
+    `Respondent: ${state.metadata.respondentName || "-"}`,
+    `Role: ${state.metadata.role || "-"}`,
+    `Outlet: ${state.metadata.outlet || "-"}`,
+    `Date: ${state.metadata.responseDate || "-"}`,
+    "The detailed response file has been downloaded. Please attach it to this WhatsApp chat."
+  ].join("
+");
+
+  const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(compact);
+  const opened = window.open(whatsappUrl, "_blank");
+  if(!opened){
+    window.location.href = whatsappUrl;
+  }
+}
+
+document.addEventListener("change", event => {
+  const target = event.target;
+
+  if(target.matches('input[type="checkbox"][data-max]')){
+    const name = target.name;
+    const max = Number(target.dataset.max);
+    const checked = document.querySelectorAll(`[name="${name}"]:checked`);
+    if(checked.length > max){
+      target.checked = false;
+      alert(`You can select a maximum of ${max} options.`);
+    }
+  }
+
+  if(target.matches('input[type="file"]')){
+    const key = target.dataset.fileKey;
+    currentFiles[key] = Array.from(target.files || []);
+    const list = document.getElementById(`${key}_filelist`);
+    list.textContent = currentFiles[key].length
+      ? currentFiles[key].map(f => `${f.name} (${Math.ceil(f.size/1024)} KB)`).join(", ")
+      : "No file selected";
+  }
+
+  saveDraft(false);
+});
+
+document.addEventListener("input", () => {
+  clearTimeout(window.__autosaveTimer);
+  window.__autosaveTimer = setTimeout(() => saveDraft(false), 500);
+});
+
+const saved = safeStorageGet(STORAGE_KEY);
+if(saved){
+  try{
+    restoreState(JSON.parse(saved));
+    document.getElementById("saveStatus").textContent = "Saved draft restored";
+  }catch(e){
+    console.warn("Could not restore saved draft", e);
+  }
+}
+updateProgress();
+</script>
+</body>
+</html>
