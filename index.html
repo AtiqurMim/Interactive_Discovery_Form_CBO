@@ -7,10 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="format-detection" content="telephone=no" />
-  <meta name="description" content="Akij Pharmacy interactive operations discovery form" />
+  <meta name="description" content="Interactive pharmacy operations discovery form" />
   <meta name="robots" content="noindex,nofollow" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <title>Akij Pharmacy Operations Discovery</title>
+  <title>Pharmacy Operations Discovery</title>
   <style>
     :root{
       --bg:#f4f7f7;
@@ -181,12 +180,8 @@
 </head>
 <body>
   <div class="container">
-    <div class="note" id="browserNotice" style="margin-top:10px">
-      <strong>Mobile opening instruction</strong>
-      এই formটি mobile browser-এর জন্য optimized। WhatsApp link থেকে open হলে প্রয়োজন হলে browser menu থেকে <b>Open in browser</b> নির্বাচন করুন।
-    </div>
     <header>
-      <h1>Akij Pharmacy Operations Discovery Form</h1>
+      <h1>Pharmacy Operations Discovery Form</h1>
       <p>Outlet growth, chronic refill, repeat customer, stockout leakage এবং revenue opportunity assessment</p>
     </header>
 
@@ -226,14 +221,9 @@
     <main id="questions"></main>
 
     <section class="section">
-      <h2>Section 2 — Data Availability & Upload</h2>
-      <p>Initial analysis-এর জন্য sensitive customer data বা full integration প্রয়োজন নেই। ৫–১০ outlet-এর ৩০–৬০ দিনের anonymized CSV/Excel export যথেষ্ট।</p>
+      <h2>Section 2 — Data Availability</h2>
+      <p>Initial analysis-এর জন্য sensitive customer data বা full integration প্রয়োজন নেই। ৫–১০ outlet-এর ৩০–৬০ দিনের anonymized CSV/Excel data যথেষ্ট।</p>
     </section>
-
-    <div class="note">
-      <strong>Attachment note</strong>
-      Selected files can be included through the phone’s native share sheet when supported. Browser reload-এর পর security restriction-এর কারণে file আবার select করতে হতে পারে; answers and comments remain saved.
-    </div>
 
     <main id="dataSections"></main>
 
@@ -249,8 +239,7 @@
   </div>
 
 <script>
-const STORAGE_KEY = "akij_pharmacy_cbo_mobile_v2";
-const currentFiles = {};
+const STORAGE_KEY = "pharmacy_cbo_mobile_v2";
 
 const categories = [
   "Diabetes","Hypertension","Cardiac","Antibiotic","Gastric",
@@ -260,7 +249,7 @@ const categories = [
 const questions = [
   {
     id:"q1", type:"radio", required:true,
-    title:"1. Akij Pharmacy-এর long-term vision কি শুধু outlet expansion, নাকি chronic patient relationship / membership / refill model বানানোর চিন্তাও আছে?",
+    title:"1. Pharmacy-এর long-term vision কি শুধু outlet expansion, নাকি chronic patient relationship / membership / refill model বানানোর চিন্তাও আছে?",
     options:["শুধু outlet expansion","Outlet expansion + chronic patient relationship","Membership / refill model actively considered","এখনও কোনো clear direction নেই","জানি না"]
   },
   {
@@ -269,17 +258,17 @@ const questions = [
     options:["Customer acquisition","Medicine availability","Outlet profitability","Operational control","Supplier / vendor discipline","Brand trust","Other"]
   },
   {
-    id:"q3", type:"radio", required:true, attachment:true,
+    id:"q3", type:"radio", required:true,
     title:"3. Repeat customer বা chronic medicine customer আলাদাভাবে track করা হয় কি? যেমন diabetes, hypertension, cardiac, asthma, thyroid patient.",
     options:["হ্যাঁ — structuredভাবে track করা হয়","আংশিকভাবে track করা হয়","Manualভাবে track করা হয়","না","জানি না"]
   },
   {
-    id:"q4", type:"radio", required:true, attachment:true,
+    id:"q4", type:"radio", required:true,
     title:"4. একজন chronic customer মাসে কতবার repeat purchase করে — এই data কি পাওয়া যায়?",
     options:["হ্যাঁ — customer-wise পাওয়া যায়","Category-wise পাওয়া যায়","আংশিকভাবে পাওয়া যায়","না","জানি না"]
   },
   {
-    id:"q5", type:"radio", required:true, attachment:true,
+    id:"q5", type:"radio", required:true,
     title:"5. Customer যদি medicine না পেয়ে চলে যায়, সেটা কি “lost demand” হিসেবে capture করা হয়?",
     options:["হ্যাঁ — system-এ","হ্যাঁ — manual register / Excel","Occasionally","না","জানি না"]
   },
@@ -290,7 +279,7 @@ const questions = [
   },
   {
     id:"q7", type:"radio", required:true,
-    title:"7. Monthly chronic medicine refill reminder / refill pack / subscription-type service Akij-এর জন্য interesting হতে পারে?",
+    title:"7. Monthly chronic medicine refill reminder / refill pack / subscription-type service প্রতিষ্ঠানের জন্য interesting হতে পারে?",
     options:["খুব interesting","Interesting, pilot করা যেতে পারে","Limited interest","Interesting নয়","জানি না"]
   },
   {
@@ -300,7 +289,7 @@ const questions = [
   },
   {
     id:"q9", type:"checkbox", required:true,
-    title:"9. Akij-এর জন্য কোন recurring model সবচেয়ে practical?",
+    title:"9. প্রতিষ্ঠানের জন্য কোন recurring model সবচেয়ে practical?",
     options:["Diabetes monthly pack","Hypertension monthly pack","Elder-care family pack","Corporate employee medicine benefit","Doctor / clinic referral-linked refill","Chronic refill club","Other"]
   },
   {
@@ -311,7 +300,7 @@ const questions = [
     secondary:["Stockout lost sales value","Near-expiry risk value","Chronic refill opportunity","Repeat customer conversion","Branch-wise revenue leakage"]
   },
   {
-    id:"q11", type:"radio", required:true, attachment:true,
+    id:"q11", type:"radio", required:true,
     title:"11. Existing ERP/POS data থেকেই যদি ১৪ দিনে leakage/revenue opportunity report বানানো যায়, সেটা দেখতে interested?",
     options:["হ্যাঁ — খুব interested","হ্যাঁ — management review করা যেতে পারে","Possibly, more detail needed","Interested নয়","জানি না"]
   },
@@ -390,14 +379,6 @@ function renderQuestion(q){
 
   html += `</div>`;
 
-  if(q.attachment){
-    html += `<div class="filebox">
-      <label class="field-label" for="${q.id}_file">Attach CSV / Excel <span class="pill">Optional</span></label>
-      <input id="${q.id}_file" type="file" accept=".csv,.xls,.xlsx" multiple data-file-key="${q.id}">
-      <div id="${q.id}_filelist" class="file-list">No file selected</div>
-    </div>`;
-  }
-
   html += `<label class="comment-label" for="${q.id}_comment">Comment / Additional information</label>
     <textarea id="${q.id}_comment" name="${q.id}_comment" placeholder="Type comment here..."></textarea>`;
 
@@ -429,10 +410,6 @@ function renderDataSection(section){
   });
 
   html += `</div>
-    <div class="filebox">
-      <label class="field-label" for="${section.id}_file">Attach CSV / Excel <span class="pill">Optional</span></label>
-      <input id="${section.id}_file" type="file" accept=".csv,.xls,.xlsx" multiple data-file-key="${section.id}">
-      <div id="${section.id}_filelist" class="file-list">No file selected</div>
     </div>
     <label class="comment-label" for="${section.id}_comment">Comment / Notes</label>
     <textarea id="${section.id}_comment" name="${section.id}_comment" placeholder="Data period, source system, limitations, approval requirement..."></textarea>`;
@@ -469,8 +446,7 @@ function collectState(){
       title:q.title,
       answer:getSelectedValues(q.id),
       secondary:getSelectedValues(`${q.id}_secondary`),
-      comment:document.getElementById(`${q.id}_comment`).value.trim(),
-      attachments:(currentFiles[q.id] || []).map(f => ({name:f.name,size:f.size,type:f.type}))
+      comment:document.getElementById(`${q.id}_comment`).value.trim()
     };
   });
 
@@ -479,8 +455,7 @@ function collectState(){
       title:s.title,
       status:document.getElementById(`${s.id}_status`).value,
       items:getSelectedValues(`${s.id}_items`),
-      comment:document.getElementById(`${s.id}_comment`).value.trim(),
-      attachments:(currentFiles[s.id] || []).map(f => ({name:f.name,size:f.size,type:f.type}))
+      comment:document.getElementById(`${s.id}_comment`).value.trim()
     };
   });
 
@@ -508,10 +483,6 @@ function restoreState(state){
     });
     const comment = document.getElementById(`${q.id}_comment`);
     if(comment) comment.value = saved.comment || "";
-    if(saved.attachments && saved.attachments.length){
-      const list = document.getElementById(`${q.id}_filelist`);
-      list.textContent = "Previously selected: " + saved.attachments.map(a => a.name).join(", ") + " — reselect before sharing.";
-    }
   });
 
   dataSections.forEach(s => {
@@ -523,10 +494,6 @@ function restoreState(state){
       if(el) el.checked = true;
     });
     document.getElementById(`${s.id}_comment`).value = saved.comment || "";
-    if(saved.attachments && saved.attachments.length){
-      const list = document.getElementById(`${s.id}_filelist`);
-      list.textContent = "Previously selected: " + saved.attachments.map(a => a.name).join(", ") + " — reselect before sharing.";
-    }
   });
 }
 
@@ -603,7 +570,7 @@ function downloadBlob(content, filename, mime){
 
 function downloadJSON(){
   const state = collectState();
-  downloadBlob(JSON.stringify(state,null,2), `Akij_Pharmacy_Response_${state.metadata.responseDate || "draft"}.json`, "application/json");
+  downloadBlob(JSON.stringify(state,null,2), `Pharmacy_Response_${state.metadata.responseDate || "draft"}.json`, "application/json");
 }
 
 function csvEscape(value){
@@ -613,21 +580,21 @@ function csvEscape(value){
 
 function downloadCSV(){
   const state = collectState();
-  const rows = [["Section","ID","Question / Data Group","Answer / Status","Secondary / Fields","Comment","Attachments"]];
+  const rows = [["Section","ID","Question / Data Group","Answer / Status","Secondary / Fields","Comment"]];
   questions.forEach(q => {
     const r = state.questions[q.id];
-    rows.push(["Question",q.id,q.title,r.answer,r.secondary,r.comment,r.attachments.map(a=>a.name)]);
+    rows.push(["Question",q.id,q.title,r.answer,r.secondary,r.comment]);
   });
   dataSections.forEach(s => {
     const r = state.dataSections[s.id];
-    rows.push(["Data",s.id,s.title,r.status,r.items,r.comment,r.attachments.map(a=>a.name)]);
+    rows.push(["Data",s.id,s.title,r.status,r.items,r.comment]);
   });
   const csv = "\uFEFF" + rows.map(row => row.map(csvEscape).join(",")).join("\n");
-  downloadBlob(csv, `Akij_Pharmacy_Response_${state.metadata.responseDate || "draft"}.csv`, "text/csv;charset=utf-8");
+  downloadBlob(csv, `Pharmacy_Response_${state.metadata.responseDate || "draft"}.csv`, "text/csv;charset=utf-8");
 }
 
 function buildTextSummary(state){
-  let text = `AKIJ PHARMACY OPERATIONS DISCOVERY\n`;
+  let text = `PHARMACY OPERATIONS DISCOVERY\n`;
   text += `Date: ${state.metadata.responseDate || "-"}\n`;
   text += `Name: ${state.metadata.respondentName || "-"}\n`;
   text += `Role: ${state.metadata.role || "-"}\n`;
@@ -639,7 +606,6 @@ function buildTextSummary(state){
     text += `Answer: ${(r.answer || []).join(", ") || "-"}\n`;
     if(r.secondary && r.secondary.length) text += `Additional selection: ${r.secondary.join(", ")}\n`;
     if(r.comment) text += `Comment: ${r.comment}\n`;
-    if(r.attachments && r.attachments.length) text += `Attachments: ${r.attachments.map(a=>a.name).join(", ")}\n`;
     text += `\n`;
   });
 
@@ -649,7 +615,6 @@ function buildTextSummary(state){
     text += `\n${s.title}\nStatus: ${r.status || "-"}\n`;
     text += `Fields: ${r.items.join(", ") || "-"}\n`;
     if(r.comment) text += `Comment: ${r.comment}\n`;
-    if(r.attachments && r.attachments.length) text += `Attachments: ${r.attachments.map(a=>a.name).join(", ")}\n`;
   });
 
   return text;
@@ -662,7 +627,7 @@ async function shareResponse(){
   if(issues.length){
     validation.style.display = "block";
     validation.textContent = issues.join(" ");
-    validation.scrollIntoView({behavior:"smooth",block:"center"});
+    validation.scrollIntoView({behavior:"smooth", block:"center"});
     return;
   }
 
@@ -671,52 +636,34 @@ async function shareResponse(){
 
   const state = collectState();
   const fullText = buildTextSummary(state);
-  const filename = `Akij_Pharmacy_Response_${state.metadata.responseDate || "completed"}.txt`;
-  const attachments = Object.values(currentFiles).reduce(function(all, group){
-    return all.concat(group || []);
-  }, []);
+  const filename = `Pharmacy_Response_${state.metadata.responseDate || "completed"}.txt`;
 
-  // First preference: native mobile share. Share files only when the browser confirms support.
   try{
     if(navigator.share){
-      let payload = {
-        title:"Akij Pharmacy Operations Discovery",
+      await navigator.share({
+        title:"Pharmacy Operations Discovery",
         text:fullText
-      };
-
-      if(typeof File !== "undefined"){
-        const responseFile = new File([fullText], filename, {type:"text/plain"});
-        const shareFiles = [responseFile].concat(attachments);
-        if(navigator.canShare && navigator.canShare({files:shareFiles})){
-          payload.files = shareFiles;
-          payload.text = "Completed Akij Pharmacy operations discovery response.";
-        }
-      }
-
-      await navigator.share(payload);
+      });
       return;
     }
   }catch(err){
     if(err && err.name === "AbortError") return;
   }
 
-  // Fallback: download the full response and open WhatsApp with a compact message.
   downloadBlob(fullText, filename, "text/plain;charset=utf-8");
+
   const compact = [
-    "Akij Pharmacy Operations Discovery completed.",
+    "Pharmacy Operations Discovery completed.",
     `Respondent: ${state.metadata.respondentName || "-"}`,
     `Role: ${state.metadata.role || "-"}`,
     `Outlet: ${state.metadata.outlet || "-"}`,
     `Date: ${state.metadata.responseDate || "-"}`,
     "The detailed response file has been downloaded. Please attach it to this WhatsApp chat."
-  ].join("
-");
+  ].join("\n");
 
   const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(compact);
   const opened = window.open(whatsappUrl, "_blank");
-  if(!opened){
-    window.location.href = whatsappUrl;
-  }
+  if(!opened) window.location.href = whatsappUrl;
 }
 
 document.addEventListener("change", event => {
@@ -730,15 +677,6 @@ document.addEventListener("change", event => {
       target.checked = false;
       alert(`You can select a maximum of ${max} options.`);
     }
-  }
-
-  if(target.matches('input[type="file"]')){
-    const key = target.dataset.fileKey;
-    currentFiles[key] = Array.from(target.files || []);
-    const list = document.getElementById(`${key}_filelist`);
-    list.textContent = currentFiles[key].length
-      ? currentFiles[key].map(f => `${f.name} (${Math.ceil(f.size/1024)} KB)`).join(", ")
-      : "No file selected";
   }
 
   saveDraft(false);
@@ -760,12 +698,6 @@ if(saved){
 }
 updateProgress();
 </script>
-<script>
-if ("serviceWorker" in navigator && location.protocol === "https:") {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("./service-worker.js").catch(function () {});
-  });
-}
-</script>
+
 </body>
 </html>
